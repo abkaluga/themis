@@ -4,16 +4,14 @@
 
 uint32_t tab[300000], count[300000];
  
-uint32_t Find(uint32_t a)
-{
+uint32_t Find(uint32_t a){
 	if (tab[a]==a) return a;
 	uint32_t fa = Find(tab[a]);
 	tab[a] = fa;
 	return fa;
 }
  
-bool Union(uint32_t a, uint32_t b)
-{
+bool Union(uint32_t a, uint32_t b){
 	uint32_t fa = Find(a);
 	uint32_t fb = Find(b);
  

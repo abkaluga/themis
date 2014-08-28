@@ -3,29 +3,32 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-
+#include <list>
 int main(){
 
 	char *a=(char*)calloc(1000,sizeof(char));
 	char *b=(char*)calloc(1000,sizeof(char));
 	char *c=(char*)calloc(2000,sizeof(char));
-	read(0,a,1000);
-	read(0,b,1000);
-	read(0,c,2000);
-	uint16_t ward1=0,ward2=0,ward3=0;
-	while( strlen(a)!=ward1 && strlen(b)!=ward2){
-		if (strncmp(a+ward1,c+ward3,1)==0)		{
-			printf("Przesunięto ward1 i ward3\n");
-			++ward1; ++ward3;
-		} else if (strncmp(b+ward2,c+ward3,1)==0){
-			printf("Przesunięto ward2 i ward3\n");
-			++ward2; ++ward3;
-		} else break;
 
+	scanf("%s\n%s%s\n",a,b,c);
+	std::list<char> lista(a, a +strlen(a)),listb(b, b +strlen(b)),listc(c, c +strlen(c));		//Copy array to list
+
+	std::list<char>::iterator ita=lista.begin(),itc=listc.begin();								//Iterator 
+	while(ita!=lista.end() && itc!=listc.end()){												//"Erase" word a from word c
+		while (*ita!=*itc && itc!=listc.end()) ++itc;
+
+		if (*ita==*itc) listc.erase(itc++);
+		ita++;
 	}
-
-	if(ward3==strlen(c)) printf("TAK\n");
+	std::list<char>::iterator itb=listb.begin();
+	itc=listc.begin();
+	while (itc!=listc.end()&& itb!=listb.end()){												//Check is word c is now word b.
+		if (*itc!=*itb) {
+			break;
+		}
+		++itc;++itb;
+	}
+	if(itc==listc.end()&& itb==listb.end())	printf("TAK\n");
 	else printf("NIE\n");
-
-
+	return 0;
 }

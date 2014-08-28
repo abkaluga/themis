@@ -40,7 +40,12 @@ void dijkstra(uint32_t s){
             c = adj[u][i].second;
             if (weight[u]+c < weight[v]){
                 weight[v] = weight[u]+c;
-                if (mset.find(v)==mset.end()) mset.insert(v);
+                set<uint32_t>::iterator it=mset.find(v);        //if not in set add it
+                if (it==mset.end()) mset.insert(v);
+                else {
+                    mset.erase(it);                             //if yes, it is on wrong position.
+                    mset.insert(v);                             //need replace
+                }
             }
         }
     } 

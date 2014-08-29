@@ -1,50 +1,44 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
+#include <string>
 #include <stdint.h>
-#include <unistd.h>
-
-#define MAX 1000000
-
-
-void initTable(uint32_t tab[], char templat[], uint32_t m){
-	tab[0]=0; tab[1]=0; 
-	uint32_t t=0;
-	for (uint32_t j=2; j<=m; j++){
-	while ((t>0)&&(templat[t]!=templat[j-1])) t=tab[t];
-		if (templat[t]==templat[j-1]) t++;
-			tab[j]=t;
-	}
+#include <string.h>
+ 
+uint32_t  n, m, k, q, pi[1000001];
+char  P[1000001]; // P[] - wzorzec o dlugosci m
+char  T[1000001]; // T[] - tekst o dlugosci n
+ 
+void CPF(){
+        pi[0] = 0; q = 0;
+        for(k=1; k<m; k++){
+                while(q>0 && P[k] != P[q]) q=pi[q-1];
+                	if (P[k] == P[q]) pi[k] = ++q;
+                	else pi[k] = 0;
+        }
 }
  
-void kmp(uint32_t P[], char templat[], uint32_t m, char text[],uint32_t n){
-	uint32_t i=0, j=0;
-	while (i<(m-n+1)){
-		j=P[j];
-		while((j<n)&&(templat[j]==text[i+j])) j++;
-		/*magic*/
-		if (j==n) printf("%d\n",i); 
-		i+=P[j]?P[j]:1;
-	}
-
+void kmp()
+{
+    q=0;
+    for(uint32_t i=0; i<n; i++){
+        while(q>0 && T[i] != P[q]) q = pi[q-1];
+        if (T[i] == P[q]) q++;
+        if(q == m){
+            printf("%u\n", i-m + 1);
+            q = pi[q-1];
+        }
+    }
 }
-
  
-int main(void){
-	char templat[MAX], text[MAX];
-	uint32_t P[MAX],loops;
-	scanf("%u\n",&loops);
-	while((loops--)>0){
-		scanf("%s",templat);
-		scanf("%s",text);
-		uint32_t n=strlen(templat), m=strlen(text);
-		templat[n]='\n';
-		--n;
-		if (m<n) continue;
-		initTable(P,templat,m);
-		kmp(P,templat,m,text,n);
-		memset (P,0,m);
-	}
-
+int main(){
+    uint32_t Test;
+    scanf("%u\n", &Test);
+    while(Test--)
+    {
+        scanf("%s", P);  m = strlen(P);
+        scanf("%s", T); n = strlen(T);
+        CPF();
+        if(m <= n) kmp();
+    }
+    return 0;
 }
-
